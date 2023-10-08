@@ -1,4 +1,4 @@
-from typing import List, Tuple, Dict, Union
+from typing import List, Tuple, Dict
 
 ASCII_Q_SCORE = {
     '!': [33, 0],
