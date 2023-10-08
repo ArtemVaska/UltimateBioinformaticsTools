@@ -98,8 +98,7 @@ def run_ultimate_protein_tools(*args: Union[str, List[str]], **kwargs) -> list:
     Accepts command and runs it on input data with parameters.
 
     Args:
-    - args (Union[str, List[str]]): the first argument is a command to do
-        with sequences, which are other arguments
+    - args (str): the first argument is a command to do with sequences, which are other arguments
     - kwargs (str): various arguments for specific command
 
     Possible commands:
@@ -113,14 +112,7 @@ def run_ultimate_protein_tools(*args: Union[str, List[str]], **kwargs) -> list:
     - list: a list with processed sequences
     """
 
-    function, *sequences = args  # micro-parsing
-    if isinstance(sequences, list):
-        seqs = []
-        for seq_list in sequences:
-            for seq in seq_list:
-                seqs.append(seq)
-    else:
-        seqs = sequences
+    function, *seqs = args
 
     functions = {
         'is_protein_valid': protein_tools.is_protein_valid,
