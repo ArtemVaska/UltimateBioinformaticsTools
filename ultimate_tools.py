@@ -16,13 +16,11 @@ def filter_fastq_seqs(
 
     Args:
     - seqs (Dict[str, Tuple[str]]): a dictionary with FASTQ-file contents
-    - gc_bounds (Union[float, Tuple[float]]):
-        GC-content boundaries (from 0 to 100)
+    - gc_bounds (Union[float, Tuple[float]]): GC-content boundaries (from 0 to 100)
         within which filtered sequences must be included
     - length_bounds (Union[int, Tuple[int]]): length boundaries
         within which filtered sequences must be included
-    - quality_threshold (int): reading quality value
-        according to table phred+33,
+    - quality_threshold (int): reading quality value according to table phred+33,
         below which filtering will not be performed
 
     Return:
@@ -57,8 +55,7 @@ def run_dna_rna_tools(*args: str) -> Union[str, List[str]]:
     Accepts sequences and action to be done with them.
 
     Args:
-    The last argument is the action performed on the sequences
-        that are the other arguments
+    The last argument is the action performed on the sequences that are the other arguments
 
     Possible actions:
     - transcribe
