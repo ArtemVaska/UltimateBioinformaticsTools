@@ -55,7 +55,7 @@ def run_dna_rna_tools(*args: str) -> Union[str, List[str]]:
     Args:
     The last argument is the action performed on the sequences that are the other arguments
 
-    Possible commands:
+    Possible actions:
     - transcribe
     - complement
     - reverse
