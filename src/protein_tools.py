@@ -121,3 +121,34 @@ def count_aa(
     for aa in amino_acids:
         aa_dict_count[aa] = seq.count(aa)
     return aa_dict_count
+
+
+def get_fracture_of_aa(
+    seq: str,
+    show_in_percentages: bool = False,
+    amino_acids: str = None
+) -> Dict[str, float]:
+    """
+    Calculates the fracture or percentage of amino acids in a protein sequence.
+
+    Arguments:
+    - seq (str): sequence in which you need to calculate the fracture of amino acids
+    - show_as_percentage (bool): change it to True, if you want to get results with percentages
+    - aminoacids (str): the fracture of which amino acids to count in the sequence
+
+    Return:
+    - dict: a dictionary with amino acids and its fracture or percentage with 2 or 4 digits after comma
+    """
+
+    if show_in_percentages:
+        mult = 100
+        round_var = 2
+    else:
+        mult = 1
+        round_var = 4
+    aa_dict_count = count_aa(seq, amino_acids=amino_acids)
+    aa_dict_percent = {}
+    len_of_protein = get_length_of_protein(seq)
+    for aa, count in aa_dict_count.items():
+        aa_dict_percent[aa] = round(count / len_of_protein * mult, round_var)
+    return aa_dict_percent
