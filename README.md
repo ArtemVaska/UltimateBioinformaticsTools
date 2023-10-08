@@ -1,8 +1,6 @@
 # Almost-Ultimate-Bioinformatics-Tools
 This is the repo for the 5th HomeWork of the BI Python 2023 course
 
-# Ultimate Protein Tools
-
 ### Overview
 
 This project contains a `ultimate_tools.py` program, which implements the `run_ultimate_protein_tools`, `run_dna_rna_tools` and `filter_fastq_seqs` functions. These functions accept various biological sequences and the action that needs to be performed with them. 
@@ -176,7 +174,7 @@ The program involves the analysis of protein sequences consisting of <u>**20 can
 
 ```python
 run_ultimate_protein_tools('get_protein_rnas_number', ['AAAAAAAAA', 'HJKASDKHSJAD'])
-Some of your sequences have mistakes!
+'Some of your sequences have mistakes!'
 [262144, None]
 ```
 
@@ -235,7 +233,7 @@ run_dna_rna_tools('ATG', 'aT', 'reverse')
 ['GTA', 'Ta']
 
 run_ultimate_protein_tools('get_protein_rnas_number', ['AAAAAAAAA', 'HJKASDKHSJAD'])
-Some of your sequences have mistakes!
+'Some of your sequences have mistakes!'
 [262144, None]
 
 run_ultimate_protein_tools('get_fracture_of_aa', 'MMMfasdLA')
@@ -250,7 +248,7 @@ run_ultimate_protein_tools('get_fracture_of_aa', 'MMMfasdLA')
  {'A': 1.0}]
 
 run_ultimate_protein_tools('is_protein_valid', 'MMMfasdLA', 'XXXDDDD')
-Some of your sequences have mistakes!
+'Some of your sequences have mistakes!'
 [True, None]
 
 run_ultimate_protein_tools('count_aa', 'MMMfasdLA')
