@@ -1,6 +1,7 @@
 from typing import List, Tuple, Dict, Union
 
 import src.fastq_tools as fastq_tools
+import src.dna_rna_tools as dna_rna_tools
 
 
 def filter_fastq_seqs(
@@ -44,3 +45,41 @@ def filter_fastq_seqs(
                 quality_in_bounds[key]) is True:
             filtered_fastq_seqs[key] = seqs[key]
     return filtered_fastq_seqs
+
+
+def run_dna_rna_tools(*args: str) -> Union[str, List[str]]:
+    """
+    Accepts sequences and action to be done with them.
+
+    Args:
+    The last argument is the action performed on the sequences that are the other arguments
+
+    Return:
+    - Union[str, List[str]]: sequence / sequences after action
+    """
+
+    *seqs, function = args
+    functions = {
+        'transcribe': dna_rna_tools.transcribe,
+        'reverse': dna_rna_tools.reverse,
+        'complement': dna_rna_tools.complement,
+        'reverse_complement': dna_rna_tools.reverse_complement
+    }
+    result_list = []
+    show_warning_message = False
+    for seq in seqs:
+        if (set(seq) <= set('AUTGCautgc')) is False or 'T' in seq.upper() and 'U' in seq.upper():
+            result_list.append(None)
+            show_warning_message = True
+        else:
+            res = functions[function](seq)
+            result_list.append(res)
+
+    if show_warning_message:
+        print('Some of your sequences have unreadable data!')
+
+    if len(result_list) == 1:
+        return result_list[0]
+    else:
+        return result_list
+    
