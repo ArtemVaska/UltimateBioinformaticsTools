@@ -133,3 +133,35 @@ def is_gc_and_length_in_bounds(
         else:
             seqs_gc_and_len_in_bounds[key].append(False)
     return seqs_gc_and_len_in_bounds
+
+
+def is_quality_in_bounds(
+        seqs: Dict[str, Tuple[str]],
+        quality_threshold: int = 0
+) -> Dict[str, bool]:
+    """
+    Checks whether the average sequences read quality value is below the specified quality threshold.
+
+    This is additional function for the filter_fastq_seqs function to work correctly
+
+    Args:
+    - seqs (Dict[str, Tuple[str]]): a dictionary with fastq-file contents
+    - quality_threshold (int): sequences whose average read quality is lower than this will not be filtered
+
+    Return:
+    - Dict[str, bool]: a dictionary which contains the results of checking
+        whether sequences are below the specified quality threshold
+    """
+
+    quality_in_bounds = {}
+    for key in seqs:
+        qual_seq = seqs[key][1]
+        qual_list = []
+        for value in qual_seq:
+            qual_list.append(ASCII_Q_SCORE[value][1])
+        mean_qual = sum(qual_list) / len(qual_list)
+        if mean_qual >= quality_threshold:
+            quality_in_bounds[key] = True
+        else:
+            quality_in_bounds[key] = False
+    return quality_in_bounds
