@@ -79,3 +79,17 @@ def get_protein_rnas_number(seq: str) -> int:
     for amino_acid in seq:
         rnas_num *= len(RNA_AA_TABLE[amino_acid])
     return rnas_num
+
+
+def get_length_of_protein(seq: str) -> int:
+    """
+    Calculates the length of a protein.
+
+    Argument:
+    - seq (str): sequence to calculate the length
+
+    Return:
+    - int: sequence length
+    """
+
+    return len(seq)
