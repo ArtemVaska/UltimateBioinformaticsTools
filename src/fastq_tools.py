@@ -83,3 +83,19 @@ EXAMPLE_FASTQ = {
         ('AGTGAGACACCCCTGAACATTCCTAGTAAGACATCTTTGAATATTACTAGTTAGCCACACTTTAAAATGACCCG',
          '<98;<@@@:@CD@BCCDD=DBBCEBBAAA@9???@BCDBCGF=GEGDFGDBEEEEEFFFF=EDEE=DCD@@BBC')
     }
+
+
+def calculate_gc_content(seq: str) -> float:
+    """
+    Calculates guanine-cytosine content in sequence.
+
+    This is additional function for the filter_fastq_seqs function to work correctly
+
+    Args:
+    - seq (str): sequence in which to calculate GC-content
+
+    Return:
+    - float: GC-content in percentages
+    """
+
+    return (seq.upper().count('G') + seq.upper().count('C')) / len(seq) * 100
