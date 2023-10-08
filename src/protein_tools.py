@@ -62,3 +62,20 @@ def is_protein_valid(seq: str) -> bool:
     if set(seq).issubset(RNA_AA_TABLE):
         return True
     return False
+
+
+def get_protein_rnas_number(seq: str) -> int:
+    """
+    Gets number of all possible RNA's for a given protein.
+
+    Args:
+    - seq (str): sequence to count possible RNA's
+
+    Return:
+    - int: the number of possible RNA's for sequence
+    """
+
+    rnas_num = 1
+    for amino_acid in seq:
+        rnas_num *= len(RNA_AA_TABLE[amino_acid])
+    return rnas_num
