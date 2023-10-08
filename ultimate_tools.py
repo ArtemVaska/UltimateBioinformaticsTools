@@ -2,6 +2,7 @@ from typing import List, Tuple, Dict, Union
 
 import src.fastq_tools as fastq_tools
 import src.dna_rna_tools as dna_rna_tools
+import src.protein_tools as protein_tools
 
 
 def filter_fastq_seqs(
@@ -78,6 +79,51 @@ def run_dna_rna_tools(*args: str) -> Union[str, List[str]]:
     if show_warning_message:
         print('Some of your sequences have unreadable data!')
 
+    if len(result_list) == 1:
+        return result_list[0]
+    else:
+        return result_list
+
+
+def run_ultimate_protein_tools(*args: Union[str, List[str]], **kwargs) -> list:
+    """
+    Accepts command and runs it on input data with parameters.
+
+    Args:
+    - args (Union[str, List[str]]): the first argument is a command to do with sequences, which are other arguments
+    - kwargs (str): various arguments for specific command
+
+    Return:
+    - list: a list with processed sequences
+    """
+
+    function, *sequences = args  # micro-parsing
+    if isinstance(sequences, list):
+        seqs = []
+        for seq_list in sequences:
+            for seq in seq_list:
+                seqs.append(seq)
+    else:
+        seqs = sequences
+
+    functions = {
+        'is_protein_valid': protein_tools.is_protein_valid,
+        'get_protein_rnas_number': protein_tools.get_protein_rnas_number,
+        'get_length_of_protein': protein_tools.get_length_of_protein,
+        'count_aa': protein_tools.count_aa,
+        'get_fracture_of_aa': protein_tools.get_fracture_of_aa
+    }
+    result_list = []
+    show_warning_message = False
+    for seq in seqs:
+        if not protein_tools.is_protein_valid(seq):
+            result_list.append(None)
+            show_warning_message = True
+        else:
+            res = functions[function](seq, **kwargs)
+            result_list.append(res)
+    if show_warning_message:
+        print('Some of your sequences have mistakes!')
     if len(result_list) == 1:
         return result_list[0]
     else:
