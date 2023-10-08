@@ -93,3 +93,31 @@ def get_length_of_protein(seq: str) -> int:
     """
 
     return len(seq)
+
+
+def count_aa(
+        seq: str,
+        amino_acids: str = None
+) -> Dict[str, int]:
+    """
+    Сounts the number of given or all amino acids in a protein sequence.
+
+    Arguments:
+    - seq (str): sequence to count amino acids
+    - aminoacids (str): which amino acids to count in sequence
+
+    Return:
+    - dict: a dictionary with amino acids and its count
+    """
+
+    aa_dict_count = {}
+    if (amino_acids is None) or (amino_acids == ''):
+        '''
+        I added an additional condition for user-friendly experience.
+        E.g., we can want to find specific aminoacid, look on result and then look on all aminoacids.
+        Without this condition we have to delete keyword argument, but with it we can only make it empty.
+        '''
+        amino_acids = ''.join(set(seq))
+    for aa in amino_acids:
+        aa_dict_count[aa] = seq.count(aa)
+    return aa_dict_count
