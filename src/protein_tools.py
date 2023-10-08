@@ -46,3 +46,19 @@ RNA_AA_TABLE = {
     'E': ['GAA', 'GAG'], 'e': ['gaa', 'gag'],
     'G': ['GGU', 'GGC', 'GGA', 'GGG'], 'g': ['ggu', 'ggc', 'gga', 'ggg']
     }
+
+
+def is_protein_valid(seq: str) -> bool:
+    """
+    Checks if protein is valid.
+
+    Args:
+    - seq (str): sequence to check
+
+    Return:
+    - bool: the result of the check
+    """
+
+    if set(seq).issubset(RNA_AA_TABLE):
+        return True
+    return False
