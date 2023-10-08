@@ -99,3 +99,37 @@ def calculate_gc_content(seq: str) -> float:
     """
 
     return (seq.upper().count('G') + seq.upper().count('C')) / len(seq) * 100
+
+
+def is_gc_and_length_in_bounds(
+        seqs: Dict[str, Tuple[str]],
+        gc_bounds: Tuple[float],
+        length_bounds: Tuple[int]
+) -> Dict[str, List[bool]]:
+    """
+    Checks whether sequences are within specified GC content and sequence length boundaries.
+
+    This is additional function for the filter_fastq_seqs function to work correctly
+
+    Args:
+    - seqs (Dict[str, Tuple[str]]): a dictionary with FASTQ-file contents
+    - gc_bounds (Tuple[float]): GC-content boundaries within which filtered sequences must be included
+    - length_bounds (Tuple[int]): length boundaries within which filtered sequences must be included
+
+    Return:
+    - Dict[str, List[bool]]: a dictionary which contains the results of checking
+        whether sequences in specified boundaries
+    """
+
+    seqs_gc_and_len_in_bounds = {}
+    for key in seqs:
+        seq = seqs[key][0]
+        if gc_bounds[0] <= calculate_gc_content(seq) <= gc_bounds[1]:
+            seqs_gc_and_len_in_bounds[key] = [True]
+        else:
+            seqs_gc_and_len_in_bounds[key] = [False]
+        if length_bounds[0] <= len(seq) <= length_bounds[1]:
+            seqs_gc_and_len_in_bounds[key].append(True)
+        else:
+            seqs_gc_and_len_in_bounds[key].append(False)
+    return seqs_gc_and_len_in_bounds
