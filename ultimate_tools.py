@@ -13,7 +13,7 @@ def filter_fastq_seqs(
     Filters provided sequences with specified parameters.
 
     Args:
-    - seqs (Dict[str, Tuple[str]]): lalal
+    - seqs (Dict[str, Tuple[str]]): a dictionary with FASTQ-file contents
     - gc_bounds (Union[float, Tuple[float]]): GC-content boundaries (from 0 to 100)
         within which filtered sequences must be included
     - length_bounds (Union[int, Tuple[int]]): length boundaries
