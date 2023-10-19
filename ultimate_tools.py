@@ -6,10 +6,11 @@ from src import protein_tools
 
 
 def filter_fastq_seqs(
-        seqs: Dict[str, Tuple[str]],
+        input_path: str,
         gc_bounds: Union[float, Tuple[float]] = (0, 100),
         length_bounds: Union[int, Tuple[int]] = (0, 2 ** 32),
-        quality_threshold: int = 0
+        quality_threshold: int = 0,
+        output_filename: str = None
 ) -> Dict[str, Tuple[str]]:
     """
     Filters provided sequences with specified parameters.
