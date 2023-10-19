@@ -185,7 +185,7 @@ def read_file(
                 seqs[name] = (seq, qual)
             elif i % 2 == 0:
                 seq = line
-            elif i % 3 != 0 and line.startswith('@'):
+            elif line.startswith('@') and not line.startswith('+'):
                 name = line
     return seqs
 
