@@ -165,3 +165,24 @@ def is_quality_in_bounds(
         else:
             quality_in_bounds[key] = False
     return quality_in_bounds
+
+
+def read_file(
+        input_path: str
+) -> Dict[str, Tuple[str]]:
+    """
+
+    """
+
+    seqs = {}
+    with open(input_path) as fastq_file:
+        for i, line in enumerate(fastq_file, start=1):
+            line = line.strip()
+            if i % 4 == 0:
+                qual = line
+                seqs[name] = (seq, qual)
+            elif i % 2 == 0:
+                seq = line
+            elif i % 3 != 0 and line.startswith('@'):
+                name = line
+    return seqs
