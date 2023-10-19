@@ -16,17 +16,23 @@ def filter_fastq_seqs(
     Filters provided sequences with specified parameters.
 
     Args:
-    - seqs (Dict[str, Tuple[str]]): a dictionary with FASTQ-file contents
-    - gc_bounds (Union[float, Tuple[float]]): GC-content boundaries (from 0 to 100)
-        within which filtered sequences must be included
-    - length_bounds (Union[int, Tuple[int]]): length boundaries
-        within which filtered sequences must be included
-    - quality_threshold (int): reading quality value according to table phred+33,
-        below which filtering will not be performed
+
+    - input_path (str):
+
+    - gc_bounds (Union[float, Tuple[float]]): GC-content boundaries (from 0 to 100) within which filtered sequences must be included
+
+    - length_bounds (Union[int, Tuple[int]]): length boundaries within which filtered sequences must be included
+
+    - quality_threshold (int): reading quality value according to table phred+33, below which filtering will not be performed
+
+    - output_filename (str):
 
     Return:
+
     - Dict[str, Tuple[str]]: a dictionary with filtered sequences
     """
+
+    seqs = fastq_tools.read_file(input_path)
 
     if isinstance(gc_bounds, (int, float)):  # input check
         gc_bounds = (0, gc_bounds)
