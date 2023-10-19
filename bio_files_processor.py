@@ -1,5 +1,6 @@
 from typing import List, Dict
 
+
 def convert_multiline_fasta_to_oneline(
         input_fasta: str,
         output_fasta: str = None
@@ -152,5 +153,3 @@ def select_genes_from_gbk_to_fasta(
         print("Output_fasta wasn't provided.\n<input_gbk>.fasta created!")
 
     return translations
-
-select_genes_from_gbk_to_fasta('example_gbk', 'hehehe')
