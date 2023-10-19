@@ -55,7 +55,7 @@ def read_gbk(input_gbk: str):
         cds_found = False
         translation_found = False
         gene_found = False
-        for i, line in enumerate(gbk, start=1):
+        for line in gbk:
             if line.find('CDS') != -1:
                 cds_found = True
             elif cds_found:
@@ -73,7 +73,7 @@ def read_gbk(input_gbk: str):
                     translation_found = True
                     name = gene if gene != '' else locus_tag
                     if line.count('"') == 2:
-                        translations[name] = line[line.find('=')+1:].strip('"\n')
+                        translations[name] = [line[line.find('=')+1:].strip('"\n')]
                         translation = []
                         cds_found = False
                         translation_found = False
@@ -83,7 +83,7 @@ def read_gbk(input_gbk: str):
                 elif translation_found:
                     if line.find('"') != -1:
                         translation.extend(line[21:line.find('"')])
-                        translations[name] = ''.join(translation)
+                        translations[name] = [''.join(translation)]
                         translation = []
                         cds_found = False
                         translation_found = False
@@ -123,12 +123,10 @@ def select_genes_from_gbk_to_fasta(
     return translations
 
 
-translations = select_genes_from_gbk_to_fasta('example_gbk')
-
 # for key, value in translations.items():
 #     print(key, value, sep='===========')
 
-with open('lol.fasta', mode='w') as output_fasta:
-    for name, translation in translations.items():
-        output_fasta.write('>' + name + '\n')
-        output_fasta.write(translation + '\n\n')
+# with open('lol.fasta', mode='w') as output_fasta:
+#     for name, translation in translations.items():
+#         output_fasta.write('>' + name + '\n')
+#         output_fasta.write(''.join(translation) + '\n\n')
