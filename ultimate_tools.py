@@ -32,7 +32,7 @@ def filter_fastq_seqs(
     - Dict[str, Tuple[str]]: a dictionary with filtered sequences
     """
 
-    seqs = fastq_tools.read_file(input_path + '.fastq')
+    seqs = fastq_tools.read_file(input_path)
 
     if isinstance(gc_bounds, (int, float)):  # input check
         gc_bounds = (0, gc_bounds)
