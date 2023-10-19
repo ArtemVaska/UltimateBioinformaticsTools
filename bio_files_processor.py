@@ -133,10 +133,7 @@ def select_genes_from_gbk_to_fasta(
     - Dict[str, List[str]]: a dictionary with name of gene and its translation info
     """
 
-    translations, cds_counter = read_gbk(input_gbk)
-    for name in translations:
-        translations[name] += [translations[name][1] - 1]  # upstream cds
-        translations[name] += [cds_counter - translations[name][1]]  # downstream cds
+    translations = read_gbk(input_gbk)
 
     if output_fasta is None:
         warning_message = True
