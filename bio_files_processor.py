@@ -55,9 +55,11 @@ def read_gbk(input_gbk: str):
         cds_found = False
         translation_found = False
         gene_found = False
+        cds_counter = 0
         for line in gbk:
             if line.find('CDS') != -1:
                 cds_found = True
+                cds_counter += 1
             elif cds_found:
                 if not gene_found:
                     if line.find('/gene=') != -1:
@@ -73,7 +75,7 @@ def read_gbk(input_gbk: str):
                     translation_found = True
                     name = gene if gene != '' else locus_tag
                     if line.count('"') == 2:
-                        translations[name] = [line[line.find('=')+1:].strip('"\n')]
+                        translations[name] = [line[line.find('=')+1:].strip('"\n')] + [cds_counter]
                         translation = []
                         cds_found = False
                         translation_found = False
@@ -83,7 +85,7 @@ def read_gbk(input_gbk: str):
                 elif translation_found:
                     if line.find('"') != -1:
                         translation.extend(line[21:line.find('"')])
-                        translations[name] = [''.join(translation)]
+                        translations[name] = [''.join(translation)] + [cds_counter]
                         translation = []
                         cds_found = False
                         translation_found = False
@@ -92,6 +94,14 @@ def read_gbk(input_gbk: str):
                         translation.extend(line[21:].strip())
     return translations
 
+
+def count_cds_around_genes(
+        translations,
+        genes,
+        n_before,
+        n_after
+):
+    pass
 
 def select_genes_from_gbk_to_fasta(
         input_gbk: str,
@@ -123,8 +133,10 @@ def select_genes_from_gbk_to_fasta(
     return translations
 
 
-# for key, value in translations.items():
-#     print(key, value, sep='===========')
+translations = read_gbk('example_gbk')
+
+for key, value in translations.items():
+    print(key, value, sep='===========')
 
 # with open('lol.fasta', mode='w') as output_fasta:
 #     for name, translation in translations.items():
