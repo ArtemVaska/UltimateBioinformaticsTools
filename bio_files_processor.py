@@ -1,15 +1,21 @@
-from typing import Union, List
+from typing import Union, List, Dict
 
 def convert_multiline_fasta_to_oneline(
         input_fasta: str,
         output_fasta: str = None
-):
+) -> Dict[str, str]:
     """
-    Creates
+    Creates oneline fasta from multiline fasta.
 
     Args:
-        - input_fasta (str):
-        - output_fasta (str):
+
+    - input_fasta (str): input filename without .fasta extension
+
+    - output_fasta (str): output filename without .fasta extension
+
+    Return:
+
+    - Dict[str, str]: a dictionary with id of sequence and its sequence
 
     """
 
@@ -44,9 +50,19 @@ def convert_multiline_fasta_to_oneline(
     return seqs
 
 
-def read_gbk(input_gbk: str):
+def read_gbk(input_gbk: str) -> Dict[str, List[str]]:
     """
+    Reads /gene if possible or /locus_tag for each CDS in .gbk files.
 
+    Additional function for select_genes_from_gbk_to_fasta.
+
+    Args:
+
+    - input_gbk (str): input filename without .gbk extension
+
+    Return:
+
+    - Dict[str, List[str]]: a dictionary with name of gene and its translation info
     """
 
     translations = {}
@@ -55,11 +71,11 @@ def read_gbk(input_gbk: str):
         cds_found = False
         translation_found = False
         gene_found = False
-        cds_counter = 0
+        # cds_counter = 0
         for line in gbk:
             if line.find('CDS') != -1:
                 cds_found = True
-                cds_counter += 1
+                # cds_counter += 1
             elif cds_found:
                 if not gene_found:
                     if line.find('/gene=') != -1:
@@ -75,7 +91,7 @@ def read_gbk(input_gbk: str):
                     translation_found = True
                     name = gene if gene != '' else locus_tag
                     if line.count('"') == 2:
-                        translations[name] = [line[line.find('=')+1:].strip('"\n')] + [cds_counter]
+                        translations[name] = [line[line.find('=')+1:].strip('"\n')]  # + [cds_counter]
                         translation = []
                         cds_found = False
                         translation_found = False
@@ -85,7 +101,7 @@ def read_gbk(input_gbk: str):
                 elif translation_found:
                     if line.find('"') != -1:
                         translation.extend(line[21:line.find('"')])
-                        translations[name] = [''.join(translation)] + [cds_counter]
+                        translations[name] = [''.join(translation)]  # + [cds_counter]
                         translation = []
                         cds_found = False
                         translation_found = False
@@ -95,50 +111,46 @@ def read_gbk(input_gbk: str):
     return translations
 
 
-def count_cds_around_genes(
-        translations,
-        genes,
-        n_before,
-        n_after
-):
-    pass
-
 def select_genes_from_gbk_to_fasta(
         input_gbk: str,
-        # genes: Union[str, List[str]],
-        # n_before: int,
-        # n_after: int,
+        # genes: List[str],
+        # n_before: int = 1,
+        # n_after: int = 1,
         output_fasta: str = None
-):
+) -> Dict[str, List[str]]:
+    """
+    Writes found CDS' in .fasta extension.
+
+    Args:
+
+    - input_gbk (str): input filename without .gbk extension
+
+    - output_fasta (str): output filename without .fasta extension
+
+    Return:
+
+    - Dict[str, List[str]]: a dictionary with name of gene and its translation info
     """
 
-    """
+    translations, cds_counter = read_gbk(input_gbk)
+    for name in translations:
+        translations[name] += [translations[name][1] - 1]  # upstream cds
+        translations[name] += [cds_counter - translations[name][1]]  # downstream cds
 
-    translations = read_gbk(input_gbk)
+    if output_fasta is None:
+        warning_message = True
+        output_fasta = input_gbk
+    else:
+        warning_message = False
 
-    # if output_fasta is None:
-    #     warning_message = True
-    #     output_fasta = input_gbk
-    # else:
-    #     warning_message = False
-    #
-    # with open(output_fasta + '.fasta', mode='w') as output_fasta:
-    #     for name, translation in translations.items():
-    #         output_fasta.write(name + '\n')
-    #         output_fasta.write(translation + '\n')
-    #
-    # if warning_message:
-    #     print("Output_fasta wasn't provided.\n<input_fasta>_oneline created!")
+    with open(output_fasta + '.fasta', mode='w') as output_fasta:
+        for name, translation in translations.items():
+            output_fasta.write('>' + name + '\n')
+            output_fasta.write(translations[name][0] + '\n\n')
+
+    if warning_message:
+        print("Output_fasta wasn't provided.\n<input_gbk>.fasta created!")
 
     return translations
 
-
-translations = read_gbk('example_gbk')
-
-for key, value in translations.items():
-    print(key, value, sep='===========')
-
-# with open('lol.fasta', mode='w') as output_fasta:
-#     for name, translation in translations.items():
-#         output_fasta.write('>' + name + '\n')
-#         output_fasta.write(''.join(translation) + '\n\n')
+select_genes_from_gbk_to_fasta('example_gbk', 'hehehe')
