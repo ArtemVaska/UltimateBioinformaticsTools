@@ -67,15 +67,21 @@ def run_dna_rna_tools(*args: str) -> Union[str, List[str]]:
     Accepts sequences and action to be done with them.
 
     Args:
+
     The last argument is the action performed on the sequences that are the other arguments
 
     Possible actions:
+
     - transcribe
+
     - complement
+
     - reverse
+
     - reverse_complement
 
     Return:
+
     - Union[str, List[str]]: sequence / sequences after action
     """
 
@@ -110,14 +116,21 @@ def run_ultimate_protein_tools(*args: Union[str, List[str]], **kwargs) -> list:
     Accepts command and runs it on input data with parameters.
 
     Args:
+
     - args (str): the first argument is a command to do with sequences, which are other arguments
+
     - kwargs (str): various arguments for specific command
 
     Possible commands:
+
     - is_protein_valid
+
     - get_protein_rnas_number
+
     - get_length_of_protein
+
     - count_aa
+
     - get_fracture_of_aa
 
     Return:
