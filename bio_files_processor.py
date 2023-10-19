@@ -44,16 +44,11 @@ def convert_multiline_fasta_to_oneline(
     return seqs
 
 
-def select_genes_from_gbk_to_fasta(
-        input_gbk: str,
-        # genes: Union[str, List[str]],
-        # n_before: int,
-        # n_after: int,
-        # output_fasta: str = None
-):
+def read_gbk(input_gbk: str):
     """
 
     """
+
     translations = {}
     with open(input_gbk + '.gbk') as gbk:
         translation = []
@@ -93,7 +88,38 @@ def select_genes_from_gbk_to_fasta(
                         translation.extend(line[21:])
     return translations
 
-# translations = select_genes_from_gbk_to_fasta('example_gbk')
-#
-# for key, value in translations.items():
-#     print(key, value, sep='===========')
+
+def select_genes_from_gbk_to_fasta(
+        input_gbk: str,
+        # genes: Union[str, List[str]],
+        # n_before: int,
+        # n_after: int,
+        output_fasta: str = None
+):
+    """
+
+    """
+
+    translations = read_gbk(input_gbk)
+
+    # if output_fasta is None:
+    #     warning_message = True
+    #     output_fasta = input_gbk
+    # else:
+    #     warning_message = False
+    #
+    # with open(output_fasta + '.fasta', mode='w') as output_fasta:
+    #     for name, translation in translations.items():
+    #         output_fasta.write(name + '\n')
+    #         output_fasta.write(translation + '\n')
+    #
+    # if warning_message:
+    #     print("Output_fasta wasn't provided.\n<input_fasta>_oneline created!")
+
+    return translations
+
+
+translations = select_genes_from_gbk_to_fasta('example_gbk')
+
+for key, value in translations.items():
+    print(key, value, sep='===========')
