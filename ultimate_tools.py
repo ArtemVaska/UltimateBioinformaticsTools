@@ -13,7 +13,7 @@ def filter_fastq_seqs(
         output_filename: str = None
 ) -> Dict[str, Tuple[str]]:
     """
-    Filters provided sequences with specified parameters.
+    Filters provided sequences from .fastq file with specified parameters.
 
     Args:
 
