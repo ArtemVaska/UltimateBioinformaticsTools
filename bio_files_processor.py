@@ -1,3 +1,5 @@
+from typing import Union, List
+
 def convert_multiline_fasta_to_oneline(
         input_fasta: str,
         output_fasta: str = None
@@ -42,4 +44,56 @@ def convert_multiline_fasta_to_oneline(
     return seqs
 
 
-convert_multiline_fasta_to_oneline('example_multiline_fasta')
+def select_genes_from_gbk_to_fasta(
+        input_gbk: str,
+        # genes: Union[str, List[str]],
+        # n_before: int,
+        # n_after: int,
+        # output_fasta: str = None
+):
+    """
+
+    """
+    translations = {}
+    with open(input_gbk + '.gbk') as gbk:
+        translation = []
+        cds_found = False
+        translation_found = False
+        gene_found = False
+        for i, line in enumerate(gbk, start=1):
+            if line.find('CDS') != -1:
+                cds_found = True
+            elif cds_found:
+                if not gene_found:
+                    if line.find('/gene=') != -1:
+                        gene = line[line.find('=')+1:].strip('"\n')
+                    else:
+                        gene = ''
+                    gene_found = True
+
+                if line.find('/locus_tag=') != -1:
+                    locus_tag = line[line.find('=')+1:].strip('"\n')
+
+                if line.find('/translation') != -1:
+                    translation_found = True
+                    name = gene if gene != '' else locus_tag
+                    if line.count('"') == 2:
+                        translations[name] = line[line.find('=')+1:].strip('"')
+                    else:
+                        translation.extend(line[line.find('"')+1:])
+                elif translation_found:
+                    if line.find('"') != -1:
+                        translation.extend(line[21:line.find('"')])
+                        translations[name] = ''.join(translation)
+                        translation = []
+                        cds_found = False
+                        translation_found = False
+                        gene_found = False
+                    else:
+                        translation.extend(line[21:])
+    return translations
+
+# translations = select_genes_from_gbk_to_fasta('example_gbk')
+#
+# for key, value in translations.items():
+#     print(key, value, sep='===========')
