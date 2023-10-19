@@ -1,4 +1,4 @@
-from typing import Union, List, Dict
+from typing import List, Dict
 
 def convert_multiline_fasta_to_oneline(
         input_fasta: str,
