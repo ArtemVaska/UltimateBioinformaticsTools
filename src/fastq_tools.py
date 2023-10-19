@@ -177,35 +177,40 @@ def read_file(
     """
 
     seqs = {}
-    with open(input_path) as fastq_file:
+    with open(input_path + '.fastq') as fastq_file:
         for i, line in enumerate(fastq_file, start=1):
             line = line.strip()
             if i % 4 == 0:
                 qual = line
-                seqs[name] = (seq, qual)
+                seqs[name] = (seq, comm, qual)
             elif i % 2 == 0:
                 seq = line
-            elif line.startswith('@') and not line.startswith('+'):
+            elif line.startswith('+'):
+                comm = line
+            elif line.startswith('@'):
                 name = line
     return seqs
 
 
 def save_results(
         filtered_fastq_seqs: Dict[str, Tuple[str]],
-        output_filename: str
+        output_filename: str = None
 ):
     """
 
     """
+
+    if output_filename is None:
+        raise ValueError('Please provide output_filename!')
 
     dir_name = 'fastq_filtrator_results'
     if not os.path.exists(dir_name):
         os.mkdir(dir_name)
 
     with open(os.path.join(dir_name, output_filename + '.fastq'), mode='w') as file:
-        for name, (seq, qual) in filtered_fastq_seqs.items():
+        for name, (seq, comm, qual) in filtered_fastq_seqs.items():
             file.write(name + '\n')
             file.write(seq + '\n')
-            file.write('+' + '\n')
+            file.write(comm + '\n')
             file.write(qual + '\n')
     return
