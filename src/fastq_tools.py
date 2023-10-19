@@ -157,7 +157,7 @@ def is_quality_in_bounds(
 
     quality_in_bounds = {}
     for key in seqs:
-        qual_seq = seqs[key][1]
+        qual_seq = seqs[key][2]
         qual_list = []
         for value in qual_seq:
             qual_list.append(ASCII_Q_SCORE[value][1])
