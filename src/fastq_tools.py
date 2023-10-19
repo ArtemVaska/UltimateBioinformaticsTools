@@ -1,5 +1,7 @@
 from typing import List, Tuple, Dict
 
+import os
+
 ASCII_Q_SCORE = {
     '!': [33, 0],
     '"': [34, 1],
@@ -186,3 +188,24 @@ def read_file(
             elif i % 3 != 0 and line.startswith('@'):
                 name = line
     return seqs
+
+
+def save_results(
+        filtered_fastq_seqs: Dict[str, Tuple[str]],
+        output_filename: str
+):
+    """
+
+    """
+
+    dir_name = 'fastq_filtrator_results'
+    if not os.path.exists(dir_name):
+        os.mkdir(dir_name)
+
+    with open(os.path.join(dir_name, output_filename + '.fastq'), mode='w') as file:
+        for name, (seq, qual) in filtered_fastq_seqs.items():
+            file.write(name + '\n')
+            file.write(seq + '\n')
+            file.write('+' + '\n')
+            file.write(qual + '\n')
+    return
