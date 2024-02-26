@@ -1,5 +1,5 @@
 from typing import Tuple, Union
-
+from abc import ABC, abstractmethod
 import numpy as np
 from Bio import SeqIO, SeqUtils
 
@@ -47,113 +47,57 @@ def filter_fastq(
     )
 
 
-filter_fastq(
-    "example.fastq",
-    "result.fastq",
-    gc_bounds=(50, 60),
-    length_bounds=(220, 260),
-    quality_threshold=10,
-)
+# filter_fastq(
+#     "example.fastq",
+#     "result.fastq",
+#     gc_bounds=(50, 60),
+#     length_bounds=(220, 260),
+#     quality_threshold=10,
+# )
 
 
-# def run_dna_rna_tools(*args: str) -> Union[str, List[str]]:
-#     """
-#     Accepts sequences and action to be done with them.
-#
-#     Args:
-#
-#     The last argument is the action performed on the sequences that are the other arguments
-#
-#     Possible actions:
-#
-#     - transcribe
-#
-#     - complement
-#
-#     - reverse
-#
-#     - reverse_complement
-#
-#     Return:
-#
-#     - Union[str, List[str]]: sequence / sequences after action
-#     """
-#
-#     *seqs, function = args
-#     functions = {
-#         "transcribe": dna_rna_tools.transcribe,
-#         "reverse": dna_rna_tools.reverse,
-#         "complement": dna_rna_tools.complement,
-#         "reverse_complement": dna_rna_tools.reverse_complement,
-#     }
-#     result_list = []
-#     show_warning_message = False
-#     for seq in seqs:
-#         if (
-#             (set(seq) <= set("AUTGCautgc")) is False
-#             or "T" in seq.upper()
-#             and "U" in seq.upper()
-#         ):
-#             result_list.append(None)
-#             show_warning_message = True
-#         else:
-#             res = functions[function](seq)
-#             result_list.append(res)
-#
-#     if show_warning_message:
-#         print("Some of your sequences have unreadable data!")
-#
-#     if len(result_list) == 1:
-#         return result_list[0]
-#     return result_list
-#
-#
-# def run_ultimate_protein_tools(*args: Union[str, List[str]], **kwargs) -> list:
-#     """
-#     Accepts command and runs it on input data with parameters.
-#
-#     Args:
-#
-#     - args (str): the first argument is a command to do with sequences, which are other arguments
-#
-#     - kwargs (str): various arguments for specific command
-#
-#     Possible commands:
-#
-#     - is_protein_valid
-#
-#     - get_protein_rnas_number
-#
-#     - get_length_of_protein
-#
-#     - count_aa
-#
-#     - get_fracture_of_aa
-#
-#     Return:
-#     - list: a list with processed sequences
-#     """
-#
-#     function, *seqs = args
-#
-#     functions = {
-#         "is_protein_valid": protein_tools.is_protein_valid,
-#         "get_protein_rnas_number": protein_tools.get_protein_rnas_number,
-#         "get_length_of_protein": protein_tools.get_length_of_protein,
-#         "count_aa": protein_tools.count_aa,
-#         "get_fracture_of_aa": protein_tools.get_fracture_of_aa,
-#     }
-#     result_list = []
-#     show_warning_message = False
-#     for seq in seqs:
-#         if not protein_tools.is_protein_valid(seq):
-#             result_list.append(None)
-#             show_warning_message = True
-#         else:
-#             res = functions[function](seq, **kwargs)
-#             result_list.append(res)
-#     if show_warning_message:
-#         print("Some of your sequences have mistakes!")
-#     if len(result_list) == 1:
-#         return result_list[0]
-#     return result_list
+class BiologicalSequence(ABC):
+
+    @abstractmethod
+    def is_alphabet_correct(self):
+        pass
+
+    @abstractmethod
+    def __len__(self):
+        pass
+
+    @abstractmethod
+    def __getitem__(self, item):
+        pass
+
+    @abstractmethod
+    def __repr__(self):
+        pass
+
+
+class NucleicAcidSequence(BiologicalSequence):
+    def __init__(self, seq):
+        self.seq = seq
+
+    def is_alphabet_correct(self):
+        return set(self.seq).issubset("ATGCU")
+
+    def complement(self):  # TODO
+        pass
+
+    def gc_content(self):  # TODO
+        pass
+
+    def __len__(self):
+        return len(self.seq)
+
+    def __getitem__(self, item):
+        return self.seq[item]
+
+    def __repr__(self):
+        return self.seq
+
+
+seq = NucleicAcidSequence("ATGC")
+
+print(seq)
