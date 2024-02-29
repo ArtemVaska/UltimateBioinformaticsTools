@@ -11,8 +11,29 @@ def filter_fastq(
     length_bounds: Union[int, Tuple[int, int]] = (0, 2**32),
     quality_threshold: int = 0,
 ) -> None:
+    """
+    Filters provided sequences from .fastq file with specified parameters.
 
-    if isinstance(gc_bounds, (int | float)):  # input check
+    Args:
+        input_filename: name of input file (or path)
+        output_filename: name of file with filtered seqs. If not provided creates filtered_<input_filename>
+        gc_bounds: GC-content boundaries (from 0 to 100) to filter
+        length_bounds: length of sequences boundaries to filter
+        quality_threshold: phred33 quality threshold to filter
+
+    Returns: creates the file with filtered sequences.
+
+    Example:
+        filter_fastq(
+        "example.fastq",
+        "result.fastq",
+        gc_bounds=(50, 60),
+        length_bounds=(220, 260),
+        quality_threshold=10
+        )
+    """
+
+    if isinstance(gc_bounds, (int | float)):
         gc_bounds = (0, gc_bounds)
     if isinstance(length_bounds, int):
         length_bounds = (0, length_bounds)
@@ -21,7 +42,7 @@ def filter_fastq(
         or (gc_bounds[0] > gc_bounds[1])
         or (length_bounds[0] > length_bounds[1])
         or not 0 <= quality_threshold <= 40
-    ):  # bounds check
+    ):
         raise ValueError("The bounds are indicated incorrectly!")
 
     count_inp = 0
@@ -37,7 +58,7 @@ def filter_fastq(
     )
 
     if output_filename is None:
-        output_filename = input_filename
+        output_filename = "filtered_" + input_filename
 
     count_out = SeqIO.write(filtered_seqs, output_filename, "fastq")
 
@@ -47,16 +68,7 @@ def filter_fastq(
     )
 
 
-# filter_fastq(
-#     "example.fastq",
-#     "result.fastq",
-#     gc_bounds=(50, 60),
-#     length_bounds=(220, 260),
-#     quality_threshold=10,
-# )
-
-
-class BiologicalSequence(ABC):
+class AbstractBiologicalSequence(ABC):
 
     @abstractmethod
     def is_alphabet_correct(self):
@@ -75,18 +87,16 @@ class BiologicalSequence(ABC):
         pass
 
 
-class NucleicAcidSequence(BiologicalSequence):
+class BiologicalSequence(AbstractBiologicalSequence):
+    alphabet = None
+
     def __init__(self, seq):
         self.seq = seq
 
     def is_alphabet_correct(self):
-        return set(self.seq).issubset("ATGCU")
-
-    def complement(self):  # TODO
-        pass
-
-    def gc_content(self):  # TODO
-        pass
+        if self.alphabet is None:
+            raise NotImplementedError()
+        return set(self.seq).issubset(self.alphabet)
 
     def __len__(self):
         return len(self.seq)
@@ -98,6 +108,54 @@ class NucleicAcidSequence(BiologicalSequence):
         return self.seq
 
 
-seq = NucleicAcidSequence("ATGC")
+class NucleicAcidSequence(BiologicalSequence):
+    def __init__(self, seq):
+        super().__init__(seq)
 
-print(seq)
+    def complement(self):
+        if self.is_alphabet_correct():
+            complemented_seq = self.seq.translate(str.maketrans("ATGCU", "TACGA"))
+            return type(self)(complemented_seq)
+
+    def gc_content(self):
+        return round((self.seq.count("G") + self.seq.count("C")) / len(self.seq), 2)
+
+
+class DNASequence(NucleicAcidSequence):
+    alphabet = set("ATGC")
+
+    def __init__(self, seq):
+        super().__init__(seq)
+
+    def transcribe(self):
+        if self.is_alphabet_correct():
+            transcribed_seq = self.seq.translate(str.maketrans("ATGC", "UACG"))
+            return RNASequence(transcribed_seq)
+
+
+class RNASequence(NucleicAcidSequence):
+    alphabet = set("AUGC")
+
+    def __init__(self, seq):
+        super().__init__(seq)
+
+
+class AminoAcidSequence(BiologicalSequence):
+    alphabet = set("FLSY*CWPHQRIMTNKVADEG")
+
+    def __init__(self, seq):
+        super().__init__(seq)
+
+    def count_aa(self):
+        amino_acids_dict = {}
+        for aa in self.seq:
+            amino_acids_dict[aa] = self.seq.count(aa)
+        return amino_acids_dict
+
+
+nas = NucleicAcidSequence("ATGCATGCAT")
+dna = DNASequence("ATGC")
+rna = RNASequence("ATGCGC")
+protein = AminoAcidSequence("MCWPHCWPHCWPHCWPH*")
+
+print(type(dna.transcribe()))
