@@ -90,26 +90,26 @@ class AbstractBiologicalSequence(ABC):
 class BiologicalSequence(AbstractBiologicalSequence):
     alphabet = None
 
-    def __init__(self, seq):
+    def __init__(self, seq: str):
         self.seq = seq
 
-    def is_alphabet_correct(self):
+    def is_alphabet_correct(self) -> bool:
         if self.alphabet is None:
             raise NotImplementedError()
         return set(self.seq).issubset(self.alphabet)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.seq)
 
-    def __getitem__(self, item):
+    def __getitem__(self, item) -> str:
         return self.seq[item]
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.seq
 
 
 class NucleicAcidSequence(BiologicalSequence):
-    def __init__(self, seq):
+    def __init__(self, seq: str):
         super().__init__(seq)
 
     def complement(self):
@@ -117,14 +117,14 @@ class NucleicAcidSequence(BiologicalSequence):
             complemented_seq = self.seq.translate(str.maketrans("ATGCU", "TACGA"))
             return type(self)(complemented_seq)
 
-    def gc_content(self):
+    def gc_content(self) -> float:
         return round((self.seq.count("G") + self.seq.count("C")) / len(self.seq), 2)
 
 
 class DNASequence(NucleicAcidSequence):
     alphabet = set("ATGC")
 
-    def __init__(self, seq):
+    def __init__(self, seq: str):
         super().__init__(seq)
 
     def transcribe(self):
@@ -143,19 +143,11 @@ class RNASequence(NucleicAcidSequence):
 class AminoAcidSequence(BiologicalSequence):
     alphabet = set("FLSY*CWPHQRIMTNKVADEG")
 
-    def __init__(self, seq):
+    def __init__(self, seq: str):
         super().__init__(seq)
 
-    def count_aa(self):
+    def count_aa(self) -> dict:
         amino_acids_dict = {}
         for aa in self.seq:
             amino_acids_dict[aa] = self.seq.count(aa)
         return amino_acids_dict
-
-
-nas = NucleicAcidSequence("ATGCATGCAT")
-dna = DNASequence("ATGC")
-rna = RNASequence("ATGCGC")
-protein = AminoAcidSequence("MCWPHCWPHCWPHCWPH*")
-
-print(type(dna.transcribe()))
