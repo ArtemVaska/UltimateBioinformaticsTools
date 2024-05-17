@@ -14,6 +14,10 @@ from dotenv import load_dotenv
 from genscan_scripts import parse_soup, URL, ORGANISMS, EXON_CUTOFFS
 
 
+class WrongAlphabetError(ValueError):
+    pass
+
+
 class AbstractBiologicalSequence(ABC):
 
     @abstractmethod
@@ -42,7 +46,13 @@ class BiologicalSequence(AbstractBiologicalSequence):
     def is_alphabet_correct(self) -> bool:
         if self.alphabet is None:
             raise NotImplementedError()
-        return set(self.seq).issubset(self.alphabet)
+
+        result = set(self.seq).issubset(self.alphabet)
+
+        if not result:
+            raise WrongAlphabetError("Alphabet of input sequence is not correct")
+
+        return result
 
     def __len__(self) -> int:
         return len(self.seq)
@@ -58,11 +68,6 @@ class NucleicAcidSequence(BiologicalSequence):
     def __init__(self, seq: str):
         super().__init__(seq)
 
-    def complement(self):
-        if self.is_alphabet_correct():
-            complemented_seq = self.seq.translate(str.maketrans("ATGCU", "TACGA"))
-            return type(self)(complemented_seq)
-
     def gc_content(self) -> float:
         return round((self.seq.count("G") + self.seq.count("C")) / len(self.seq), 2)
 
@@ -73,10 +78,13 @@ class DNASequence(NucleicAcidSequence):
     def __init__(self, seq: str):
         super().__init__(seq)
 
+    def complement(self):
+        complemented_seq = self.seq.translate(str.maketrans("ATGCU", "TACGA"))
+        return type(self)(complemented_seq)
+
     def transcribe(self):
-        if self.is_alphabet_correct():
-            transcribed_seq = self.seq.translate(str.maketrans("ATGC", "UACG"))
-            return RNASequence(transcribed_seq)
+        transcribed_seq = self.seq.translate(str.maketrans("ATGC", "UACG"))
+        return RNASequence(transcribed_seq)
 
 
 class RNASequence(NucleicAcidSequence):
