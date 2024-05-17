@@ -9,8 +9,8 @@ This project contains many useful functions for processing and analyzing bioinfo
 ### Installation
 
 ```shell
-git clone NAME_OF_REPO && \
-cd NAME_OF_REPO
+git clone git@github.com:ArtemVaska/UltimateBioinformaticsTools.git && \
+cd git@github.com:ArtemVaska/UltimateBioinformaticsTools.git
 ```
 
 ```shell
