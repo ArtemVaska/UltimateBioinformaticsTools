@@ -10,7 +10,7 @@ This project contains many useful functions for processing and analyzing bioinfo
 
 ```shell
 git clone git@github.com:ArtemVaska/UltimateBioinformaticsTools.git && \
-cd git@github.com:ArtemVaska/UltimateBioinformaticsTools.git
+cd UltimateBioinformaticsTools
 ```
 
 ```shell
