@@ -228,7 +228,7 @@ def run_genscan(
     sequence: str = None,
     sequence_file: str = None,
     organism: str = "Vertebrate",
-    exon_cutoff: float = 0.01,
+    exon_cutoff: float = 1.00,
     sequence_name: str = "",
 ) -> GenscanOutput:
     if sequence is None and sequence_file is None:
