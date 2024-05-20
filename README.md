@@ -4,7 +4,7 @@ This is the repo for the HomeWorks of the ❤️‍🔥 **BI Python** ❤️‍�
 
 ### Overview
 
-This project contains many useful functions for processing and analyzing bioinformatics data. To see examples check `Showcases.ipynb`
+This project contains many useful functions and classes for processing and analyzing bioinformatics data. To see examples check `Showcases.ipynb`
 
 ### Installation
 
