@@ -56,12 +56,18 @@ class RandomForestClassifierCustom(BaseEstimator):
 
         return self
 
-    def predict_proba(self, X, n_jobs=1):
-        probas = 0
-        for i, tree in enumerate(self.trees):
-            probas += tree.predict_proba(X[:, self.feat_ids_by_tree[i]])
-        avg_probas = probas / self.n_estimators
+    def loop_proba(self, args):
+        X, i, tree = args
+        proba = tree.predict_proba(X[:, self.feat_ids_by_tree[i]])
+        return proba
 
+    def predict_proba(self, X, n_jobs=1):
+        with ProcessPoolExecutor(max_workers=n_jobs) as executor:
+            probas = executor.map(
+                self.loop_proba, [(X, i, tree) for i, tree in enumerate(self.trees)]
+            )
+
+        avg_probas = sum(probas) / self.n_estimators
         return avg_probas
 
     def predict(self, X, n_jobs=1):
