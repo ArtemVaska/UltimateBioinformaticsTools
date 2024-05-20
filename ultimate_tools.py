@@ -115,16 +115,14 @@ def filter_fastq(
     quality_threshold: int = 0,
 ) -> None:
     """
-    Filters provided sequences from .fastq file with specified parameters.
+    Filters provided sequences from FASTQ file with specified parameters.
 
-    Args:
-        input_filename: name of input file (or path)
-        output_filename: name of file with filtered seqs. If not provided creates filtered_<input_filename>
-        gc_bounds: GC-content boundaries (from 0 to 100) to filter
-        length_bounds: length of sequences boundaries to filter
-        quality_threshold: phred33 quality threshold to filter
-
-    Returns: creates the file with filtered sequences.
+    :param input_filename: name of input file (or path)
+    :param output_filename: name of file with filtered seqs. If not provided creates filtered_<input_filename>
+    :param gc_bounds: GC-content boundaries (from 0 to 100) to filter
+    :param length_bounds: length of sequences boundaries to filter
+    :param quality_threshold: phred33 quality threshold to filter
+    :return: the file with filtered sequences
 
     Example:
         filter_fastq(
@@ -172,6 +170,13 @@ def filter_fastq(
 
 
 def telegram_logger(chat_id: int) -> Callable:
+    """
+    A decorator function to log function execution details to a Telegram chat.
+
+    :param chat_id: the chat ID where the log messages will be sent
+    :return: the decorated function
+    """
+
     def decorator(func):
         load_dotenv("secure.env")
         tg_url = "https://api.telegram.org/bot"
@@ -231,6 +236,17 @@ def run_genscan(
     exon_cutoff: float = 1.00,
     sequence_name: str = "",
 ) -> GenscanOutput:
+    """
+    Runs GENSCAN web-tool with specified parameters and parses the result.
+
+    :param sequence: the sequence to analyze
+    :param sequence_file: the file with sequences to analyze
+    :param organism: the type of organism
+    :param exon_cutoff: the cutoff for exons
+    :param sequence_name: the sequence name (job_name)
+    :return: GenscanOutput object
+    """
+
     if sequence is None and sequence_file is None:
         raise ValueError("Either sequence or sequence_file must be specified")
 

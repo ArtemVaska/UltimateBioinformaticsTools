@@ -13,6 +13,18 @@ class FastaRecord:
 
 
 class OpenFasta:
+    """
+    A context manager for reading FASTA files.
+
+    Attributes:
+    [x] path_to_fasta: the path to the FASTA file.
+    [x] mode: the mode for opening the file, default is "r"
+
+    Methods:
+    [x] read_record(): reads the next FASTA record; analogue of readline()
+    [x] read_records(): reads all FASTA records and returns a list of FastaRecord objects; analogue of readlines()
+    """
+
     def __init__(self, path_to_fasta: str, mode: str = "r"):
         self.path_to_fasta = path_to_fasta
         self.mode = mode
